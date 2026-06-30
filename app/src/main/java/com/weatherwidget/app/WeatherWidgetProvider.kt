@@ -1,10 +1,12 @@
 package com.weatherwidget.app
 
+import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.provider.AlarmClock
 import android.widget.RemoteViews
 import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
@@ -77,6 +79,7 @@ class WeatherWidgetProvider : AppWidgetProvider() {
             val dateStr = SimpleDateFormat("EEE d MMM", Locale.getDefault()).format(now.time)
             views.setTextViewText(R.id.tv_location, cityShort)
             views.setTextViewText(R.id.tv_date, dateStr)
+            views.setOnClickPendingIntent(R.id.layout_header, alarmPendingIntent(context))
 
             val dateFmt = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
             val dayFmt  = SimpleDateFormat("EEE", Locale.getDefault())
@@ -93,13 +96,25 @@ class WeatherWidgetProvider : AppWidgetProvider() {
         fun showLoading(context: Context): RemoteViews {
             val views = RemoteViews(context.packageName, R.layout.widget_weather)
             views.setTextViewText(R.id.tv_day_2, "…")
+            views.setOnClickPendingIntent(R.id.layout_header, alarmPendingIntent(context))
             return views
         }
 
         fun showError(context: Context, message: String): RemoteViews {
             val views = RemoteViews(context.packageName, R.layout.widget_weather)
             views.setTextViewText(R.id.tv_day_2, message)
+            views.setOnClickPendingIntent(R.id.layout_header, alarmPendingIntent(context))
             return views
+        }
+
+        private fun alarmPendingIntent(context: Context): PendingIntent {
+            val intent = Intent(AlarmClock.ACTION_SHOW_ALARMS).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            }
+            return PendingIntent.getActivity(
+                context, 0, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
         }
 
         fun getAllWidgetIds(context: Context): IntArray =

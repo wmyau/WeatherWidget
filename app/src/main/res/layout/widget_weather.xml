@@ -11,6 +11,7 @@
     android:paddingBottom="4dp">
 
     <LinearLayout
+        android:id="@+id/layout_header"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1.3"
