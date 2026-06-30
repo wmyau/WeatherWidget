@@ -1,8 +1,18 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.serialization")
 }
+
+// Signing credentials: CI sets KEYSTORE_* env vars; local builds use keystore.properties (gitignored)
+val keystoreProps = Properties().also { props ->
+    val f = rootProject.file("keystore.properties")
+    if (f.exists()) props.load(f.inputStream())
+}
+fun signingProp(envKey: String, propKey: String) =
+    System.getenv(envKey) ?: keystoreProps.getProperty(propKey) ?: ""
 
 android {
     namespace = "com.weatherwidget.app"
@@ -16,8 +26,22 @@ android {
         versionName = "1.0"
     }
 
+    signingConfigs {
+        create("release") {
+            val keystoreFile = signingProp("KEYSTORE_FILE", "storeFile")
+            if (keystoreFile.isNotEmpty()) {
+                storeFile = file(keystoreFile)
+                storePassword = signingProp("KEYSTORE_PASSWORD", "storePassword")
+                keyAlias = signingProp("KEY_ALIAS", "keyAlias")
+                keyPassword = signingProp("KEY_PASSWORD", "keyPassword")
+            }
+        }
+    }
+
     buildTypes {
         release {
+            val keystoreFile = signingProp("KEYSTORE_FILE", "storeFile")
+            signingConfig = if (keystoreFile.isNotEmpty()) signingConfigs.getByName("release") else null
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(

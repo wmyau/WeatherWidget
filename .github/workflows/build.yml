@@ -1,0 +1,78 @@
+name: Build & Release
+
+on:
+  push:
+    branches: [ master ]
+    tags:     [ 'v*' ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v4
+        with:
+          java-version: '11'
+          distribution: 'temurin'
+          cache: gradle
+
+      - name: Make gradlew executable
+        run: chmod +x gradlew
+
+      # ── Debug build (every push / PR) ────────────────────────────────────────
+
+      - name: Build debug APK
+        run: ./gradlew assembleDebug --no-daemon
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: WeatherWidget-debug-${{ github.sha }}
+          path: app/build/outputs/apk/debug/app-debug.apk
+          retention-days: 14
+
+      # ── Release build (tags only) ─────────────────────────────────────────────
+      # To trigger: git tag v1.0.0 && git push origin v1.0.0
+      #
+      # Required GitHub secrets (Settings → Secrets → Actions):
+      #   KEYSTORE_BASE64   — base64-encoded keystore file
+      #                       Generate: keytool -genkey -v -keystore release.keystore
+      #                                   -alias weatherwidget -keyalg RSA -keysize 2048
+      #                                   -validity 10000
+      #                       Encode:   base64 -w 0 release.keystore  (Linux/Mac)
+      #                                 [Convert]::ToBase64String([IO.File]::ReadAllBytes("release.keystore"))  (Windows PowerShell)
+      #   KEYSTORE_PASSWORD — password you chose when generating the keystore
+      #   KEY_ALIAS         — alias you chose (e.g. weatherwidget)
+      #   KEY_PASSWORD      — key password (often same as keystore password)
+
+      - name: Decode keystore
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 --decode > $RUNNER_TEMP/release.keystore
+
+      - name: Build release APK
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: ./gradlew assembleRelease --no-daemon
+        env:
+          KEYSTORE_FILE: ${{ runner.temp }}/release.keystore
+          KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+
+      - name: Rename release APK
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          mv app/build/outputs/apk/release/app-release.apk \
+             app/build/outputs/apk/release/WeatherWidget-${{ github.ref_name }}.apk
+
+      - name: Create GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: app/build/outputs/apk/release/WeatherWidget-${{ github.ref_name }}.apk
+          generate_release_notes: true
