@@ -53,12 +53,12 @@ class WeatherWidgetProvider : AppWidgetProvider() {
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
-        val request = PeriodicWorkRequestBuilder<WeatherUpdateWorker>(30, TimeUnit.MINUTES)
+        val request = PeriodicWorkRequestBuilder<WeatherUpdateWorker>(1, TimeUnit.HOURS)
             .setConstraints(constraints)
             .build()
         WorkManager.getInstance(context).enqueueUniquePeriodicWork(
             WeatherUpdateWorker.PERIODIC_WORK_NAME,
-            ExistingPeriodicWorkPolicy.KEEP,
+            ExistingPeriodicWorkPolicy.UPDATE,
             request
         )
     }
@@ -83,12 +83,14 @@ class WeatherWidgetProvider : AppWidgetProvider() {
 
             val dateFmt = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
             val dayFmt  = SimpleDateFormat("EEE", Locale.getDefault())
+            val mainIntent = mainActivityPendingIntent(context)
             DAY_VIEW_IDS.forEachIndexed { i, viewId ->
                 val day = days.getOrNull(i) ?: return@forEachIndexed
                 val label = if (i == 0) "Today"
                             else runCatching { dayFmt.format(dateFmt.parse(day.date)!!) }.getOrDefault("---")
                 val emoji = WeatherIconMapper.getIconEmoji(day.weatherCode)
                 views.setTextViewText(viewId, "$label\n$emoji\n${day.maxTempC.toInt()}°/${day.minTempC.toInt()}°")
+                views.setOnClickPendingIntent(viewId, mainIntent)
             }
             return views
         }
@@ -113,6 +115,16 @@ class WeatherWidgetProvider : AppWidgetProvider() {
             }
             return PendingIntent.getActivity(
                 context, 0, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+        }
+
+        private fun mainActivityPendingIntent(context: Context): PendingIntent {
+            val intent = Intent(context, MainActivity::class.java).apply {
+                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
+            }
+            return PendingIntent.getActivity(
+                context, 1, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
         }

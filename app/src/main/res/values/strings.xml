@@ -1,17 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Weather Widget</string>
-    <string name="widget_description">5-day weather forecast widget</string>
+    <string name="widget_description">7-day weather forecast widget</string>
+
+    <!-- Status messages -->
     <string name="loading">Locating…</string>
+    <string name="updating_weather">Fetching weather…</string>
     <string name="no_location_permission">Location permission required</string>
     <string name="location_unavailable">Location unavailable</string>
-    <string name="weather_unavailable">Weather data unavailable</string>
-    <string name="main_instructions">Long-press your home screen and select Widgets to add the 5-day Weather Widget.</string>
-    <string name="refresh_weather">Refresh Weather</string>
-    <string name="grant_location_permission">Grant Location Permission</string>
-    <string name="permission_granted">Location permission granted. Widget will update shortly.</string>
-    <string name="permission_denied">Location permission denied. Widget needs location to show weather.</string>
-    <string name="updating_weather">Fetching weather data…</string>
-    <string name="weather_icon_desc">Weather icon</string>
+    <string name="weather_unavailable">Weather unavailable — check network</string>
+    <string name="offline_data">%1$s (offline)</string>
+
+    <!-- Search -->
+    <string name="search_city_hint">Search for a city…</string>
+    <string name="search">Search</string>
+    <string name="searching">Searching…</string>
+    <string name="no_results">No results for \"%1$s\"</string>
+    <string name="use_city">Use %1$s</string>
+
+    <!-- Buttons -->
+    <string name="refresh_weather">Refresh</string>
+    <string name="grant_location_permission">Grant location permission</string>
+    <string name="use_phone_location">Use phone location</string>
+
+    <!-- Day labels -->
     <string name="today">Today</string>
+    <string name="day_unknown">---</string>
+
+    <!-- Accessibility content descriptions -->
+    <string name="cd_weather_for_day">%1$s: %2$s</string>
+    <string name="cd_high_temp">High %1$d°</string>
+    <string name="cd_low_temp">Low %1$d°</string>
+    <string name="cd_rain">Rain %1$d%%</string>
+    <string name="cd_wind">Wind %1$d km/h</string>
+    <string name="cd_uv">UV index %1$d</string>
+    <string name="cd_location_tap">Tap to open clock and alarms</string>
+    <string name="cd_day_tap">Tap to open detailed forecast</string>
 </resources>

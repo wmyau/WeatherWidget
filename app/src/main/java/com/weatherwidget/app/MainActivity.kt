@@ -3,24 +3,24 @@ package com.weatherwidget.app
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Bundle
+import android.view.View
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
-import android.appwidget.AppWidgetManager
-import android.content.ComponentName
-import android.content.Intent
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkManager
-import com.weatherwidget.app.data.WeatherRepository
+import androidx.lifecycle.repeatOnLifecycle
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.weatherwidget.app.databinding.ActivityMainBinding
-import com.weatherwidget.app.utils.LocationHelper
-import com.weatherwidget.app.worker.WeatherUpdateWorker
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+    private val viewModel: WeatherViewModel by viewModels()
 
     companion object {
         private const val REQ_LOCATION = 100
@@ -31,13 +31,98 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.btnRefresh.setOnClickListener { triggerUpdate() }
-        binding.btnGrantPermission.setOnClickListener { requestLocationPermission() }
+        binding.rvForecast.layoutManager = LinearLayoutManager(this)
+        setupListeners()
+        observeViewModel()
 
-        if (hasLocationPermission()) {
-            binding.btnGrantPermission.isEnabled = false
-            triggerUpdate()
+        if (viewModel.uiState.value is WeatherUiState.Idle) {
+            viewModel.loadWeather()
         }
+    }
+
+    private fun setupListeners() {
+        binding.btnRefresh.setOnClickListener { viewModel.loadWeather() }
+        binding.btnGrantPermission.setOnClickListener { requestLocationPermission() }
+        binding.btnSearch.setOnClickListener { doSearch() }
+        binding.etCity.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) { doSearch(); true } else false
+        }
+        binding.btnUseSearched.setOnClickListener {
+            (viewModel.searchState.value as? SearchState.Found)?.let {
+                viewModel.confirmSearch(it.result)
+            }
+        }
+        binding.btnUsePhone.setOnClickListener { viewModel.clearManualLocation() }
+    }
+
+    private fun observeViewModel() {
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch { viewModel.uiState.collect(::renderWeatherState) }
+                launch { viewModel.searchState.collect(::renderSearchState) }
+            }
+        }
+    }
+
+    private fun renderWeatherState(state: WeatherUiState) {
+        when (state) {
+            is WeatherUiState.Idle -> {
+                binding.tvStatus.text = ""
+                binding.btnGrantPermission.visibility =
+                    if (hasLocationPermission()) View.GONE else View.VISIBLE
+                binding.btnUsePhone.visibility = View.GONE
+            }
+            is WeatherUiState.Loading -> {
+                binding.tvStatus.text = getString(R.string.updating_weather)
+                binding.rvForecast.adapter = null
+            }
+            is WeatherUiState.Success -> {
+                binding.tvStatus.text = if (state.fromCache) {
+                    getString(R.string.offline_data, state.cityName)
+                } else {
+                    state.cityName
+                }
+                binding.rvForecast.adapter = DayForecastAdapter(state.days)
+                binding.btnUsePhone.visibility = if (state.isManual) View.VISIBLE else View.GONE
+                binding.btnGrantPermission.visibility =
+                    if (state.isManual || hasLocationPermission()) View.GONE else View.VISIBLE
+            }
+            is WeatherUiState.Error -> {
+                binding.tvStatus.text = getString(state.messageRes)
+                binding.rvForecast.adapter = null
+                binding.btnGrantPermission.visibility =
+                    if (hasLocationPermission()) View.GONE else View.VISIBLE
+            }
+        }
+    }
+
+    private fun renderSearchState(state: SearchState) {
+        when (state) {
+            is SearchState.Idle -> {
+                binding.tvSearchResult.text = ""
+                binding.btnUseSearched.visibility = View.GONE
+            }
+            is SearchState.Searching -> {
+                binding.tvSearchResult.text = getString(R.string.searching)
+                binding.btnUseSearched.visibility = View.GONE
+            }
+            is SearchState.Found -> {
+                binding.tvSearchResult.text = state.result.displayName
+                binding.btnUseSearched.text = getString(R.string.use_city, state.result.name)
+                binding.btnUseSearched.visibility = View.VISIBLE
+            }
+            is SearchState.NotFound -> {
+                binding.tvSearchResult.text = getString(R.string.no_results, state.query)
+                binding.btnUseSearched.visibility = View.GONE
+            }
+        }
+    }
+
+    private fun doSearch() {
+        val query = binding.etCity.text.toString().trim()
+        if (query.isEmpty()) return
+        hideKeyboard()
+        viewModel.searchCity(query)
     }
 
     private fun hasLocationPermission() = ContextCompat.checkSelfPermission(
@@ -47,87 +132,23 @@ class MainActivity : AppCompatActivity() {
     private fun requestLocationPermission() {
         ActivityCompat.requestPermissions(
             this,
-            arrayOf(
-                Manifest.permission.ACCESS_FINE_LOCATION,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ),
+            arrayOf(Manifest.permission.ACCESS_COARSE_LOCATION),
             REQ_LOCATION
         )
     }
 
     override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
+        requestCode: Int, permissions: Array<out String>, grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode == REQ_LOCATION) {
-            if (grantResults.firstOrNull() == PackageManager.PERMISSION_GRANTED) {
-                binding.tvStatus.text = getString(R.string.permission_granted)
-                binding.btnGrantPermission.isEnabled = false
-                triggerUpdate()
-            } else {
-                binding.tvStatus.text = getString(R.string.permission_denied)
-            }
+        if (requestCode == REQ_LOCATION &&
+            grantResults.firstOrNull() == PackageManager.PERMISSION_GRANTED) {
+            viewModel.loadWeather()
         }
     }
 
-    private fun triggerUpdate() {
-        binding.tvStatus.text = getString(R.string.updating_weather)
-        binding.tvWeatherResult.text = ""
-
-        lifecycleScope.launch {
-            val location = LocationHelper.getLastKnownLocation(this@MainActivity)
-                ?: LocationHelper.requestSingleUpdate(this@MainActivity)
-
-            if (location == null) {
-                binding.tvStatus.text = "Could not get location"
-                return@launch
-            }
-
-            val lat = location.latitude
-            val lon = location.longitude
-            binding.tvStatus.text = "Got location: %.4f, %.4f".format(lat, lon)
-
-            val cityName = LocationHelper.getCityName(this@MainActivity, lat, lon)
-            LocationHelper.saveLocation(this@MainActivity, lat, lon, cityName)
-
-            binding.tvStatus.text = "Fetching weather for $cityName…"
-
-            val forecast = WeatherRepository().getForecast(lat, lon)
-            if (forecast == null) {
-                binding.tvStatus.text = "Weather fetch failed — check network"
-                return@launch
-            }
-
-            binding.tvStatus.text = "Weather Widget — $cityName"
-            binding.tvWeatherResult.text = forecast.days.joinToString("\n") { day ->
-                "%-6s  %3d° / %3d°".format(
-                    day.date.takeLast(5),
-                    day.maxTempC.toInt(),
-                    day.minTempC.toInt()
-                )
-            }
-
-            val manager = AppWidgetManager.getInstance(this@MainActivity)
-            val ids = WeatherWidgetProvider.getAllWidgetIds(this@MainActivity)
-            binding.tvStatus.text = "Weather Widget — $cityName (widget IDs: ${ids.toList()})"
-
-            if (ids.isNotEmpty()) {
-                // First: send ACTION_APPWIDGET_UPDATE from our process so the launcher
-                // treats the widget as properly initialised (onUpdate path).
-                sendBroadcast(Intent(this@MainActivity, WeatherWidgetProvider::class.java).apply {
-                    action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
-                    putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids)
-                })
-                // Then push the actual weather views directly.
-                val views = WeatherWidgetProvider.buildViews(this@MainActivity, cityName, forecast.days)
-                manager.updateAppWidget(ids, views)
-            }
-
-            // Also queue a background worker so periodic updates keep working.
-            WorkManager.getInstance(this@MainActivity)
-                .enqueue(OneTimeWorkRequestBuilder<WeatherUpdateWorker>().build())
-        }
+    private fun hideKeyboard() {
+        (getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager)
+            .hideSoftInputFromWindow(binding.etCity.windowToken, 0)
     }
 }
