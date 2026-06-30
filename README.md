@@ -76,7 +76,7 @@ All APIs are free and keyless.
 - No API keys or `google-services.json` needed
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/WeatherWidget.git
+git clone https://github.com/wmyau/WeatherWidget.git
 cd WeatherWidget
 ./gradlew assembleDebug
 adb install app/build/outputs/apk/debug/app-debug.apk
