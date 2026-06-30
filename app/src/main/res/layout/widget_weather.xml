@@ -10,15 +10,41 @@
     android:paddingTop="4dp"
     android:paddingBottom="4dp">
 
-    <TextView
-        android:id="@+id/tv_location"
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="1.3"
-        android:gravity="center_vertical"
-        android:text="Loading…"
-        android:textColor="#FFFFFFFF"
-        android:textSize="13sp" />
+        android:orientation="vertical"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/tv_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Loading…"
+            android:textColor="#FFFFFFFF"
+            android:textSize="13sp"
+            android:maxLines="1"
+            android:ellipsize="end" />
+
+        <TextClock
+            android:id="@+id/tv_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:format12Hour="h:mm a"
+            android:format24Hour="HH:mm"
+            android:textColor="#CCFFFFFF"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/tv_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="#AAFFFFFF"
+            android:textSize="11sp" />
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/tv_day_0"

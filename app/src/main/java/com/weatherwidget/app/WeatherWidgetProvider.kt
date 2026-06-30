@@ -73,10 +73,10 @@ class WeatherWidgetProvider : AppWidgetProvider() {
         fun buildViews(context: Context, cityName: String, days: List<DayForecast>): RemoteViews {
             val views = RemoteViews(context.packageName, R.layout.widget_weather)
             val now = Calendar.getInstance()
-            val cityShort = if (cityName.length > 9) cityName.take(8) + "…" else cityName
-            val dateStr = SimpleDateFormat("d MMM", Locale.getDefault()).format(now.time)
-            val timeStr = SimpleDateFormat("HH:mm", Locale.getDefault()).format(now.time)
-            views.setTextViewText(R.id.tv_location, "$cityShort\n$dateStr\n$timeStr")
+            val cityShort = if (cityName.length > 12) cityName.take(11) + "…" else cityName
+            val dateStr = SimpleDateFormat("EEE d MMM", Locale.getDefault()).format(now.time)
+            views.setTextViewText(R.id.tv_location, cityShort)
+            views.setTextViewText(R.id.tv_date, dateStr)
 
             val dateFmt = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
             val dayFmt  = SimpleDateFormat("EEE", Locale.getDefault())
