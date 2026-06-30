@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- wi-night-clear style: crescent moon with two stars -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+
+    <!-- Crescent moon: large circle minus offset smaller circle to create crescent shape -->
+    <path
+        android:fillColor="#E0E0FF"
+        android:pathData="M26,8 C17.16,8 10,15.16 10,24 C10,32.84 17.16,40 26,40 C30.3,40 34.2,38.28 37.07,35.48 C35.4,35.82 33.72,36 32,36 C23.16,36 16,28.84 16,20 C16,15.4 17.96,11.26 21.04,8.38 C22.64,8.13 24.3,8 26,8 Z" />
+
+    <!-- Stars -->
+    <path
+        android:fillColor="#E0E0FF"
+        android:pathData="M38,12 L39,10 L40,12 L42,13 L40,14 L39,16 L38,14 L36,13 Z" />
+    <path
+        android:fillColor="#E0E0FF"
+        android:pathData="M40,22 L40.7,20.6 L41.4,22 L43,22.5 L41.4,23 L40.7,24.4 L40,23 L38.4,22.5 Z" />
+
+</vector>

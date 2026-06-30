@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Weather Widget</string>
+    <string name="widget_description">5-day weather forecast widget</string>
+    <string name="loading">Locating…</string>
+    <string name="no_location_permission">Location permission required</string>
+    <string name="location_unavailable">Location unavailable</string>
+    <string name="weather_unavailable">Weather data unavailable</string>
+    <string name="main_instructions">Long-press your home screen and select Widgets to add the 5-day Weather Widget.</string>
+    <string name="refresh_weather">Refresh Weather</string>
+    <string name="grant_location_permission">Grant Location Permission</string>
+    <string name="permission_granted">Location permission granted. Widget will update shortly.</string>
+    <string name="permission_denied">Location permission denied. Widget needs location to show weather.</string>
+    <string name="updating_weather">Fetching weather data…</string>
+    <string name="weather_icon_desc">Weather icon</string>
+    <string name="today">Today</string>
+</resources>

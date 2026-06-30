@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- wi-fog style: stacked horizontal haze lines -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+
+    <!-- Sun behind fog (faint) -->
+    <path
+        android:fillColor="#FFF9C4"
+        android:pathData="M24,8 C17.37,8 12,13.37 12,20 C12,26.63 17.37,32 24,32 C30.63,32 36,26.63 36,20 C36,13.37 30.63,8 24,8 Z" />
+
+    <!-- Fog bands (horizontal stroked lines, wide rounded caps) -->
+    <path
+        android:strokeColor="#ECEFF1"
+        android:strokeWidth="3.5"
+        android:strokeLineCap="round"
+        android:pathData="M6,28 L42,28" />
+    <path
+        android:strokeColor="#CFD8DC"
+        android:strokeWidth="3.5"
+        android:strokeLineCap="round"
+        android:pathData="M10,34 L38,34" />
+    <path
+        android:strokeColor="#B0BEC5"
+        android:strokeWidth="3.5"
+        android:strokeLineCap="round"
+        android:pathData="M6,40 L42,40" />
+
+</vector>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- wi-sprinkle style: cloud with 3 light rain drops -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="48dp"
+    android:viewportWidth="48"
+    android:viewportHeight="48">
+
+    <!-- Cloud -->
+    <path
+        android:fillColor="#90A4AE"
+        android:pathData="M38,20 C38,16 35,13 31.5,13.5 C30,10 26.5,8 23,8 C18.3,8 14.5,11.5 14.5,16 C11.3,16.5 9,19 9,22.5 C9,26.2 12,29 15.8,29 L35.5,29 C37,29 38,26.3 38,24 Z" />
+
+    <!-- 3 drizzle drops (short diagonal strokes) -->
+    <path
+        android:strokeColor="#81D4FA"
+        android:strokeWidth="2.5"
+        android:strokeLineCap="round"
+        android:pathData="M16,33 L14,39 M24,33 L22,39 M32,33 L30,39" />
+
+</vector>

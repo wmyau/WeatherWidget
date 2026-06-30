@@ -1,0 +1,2 @@
+-keep class com.weatherwidget.app.data.** { *; }
+-keepattributes *Annotation*

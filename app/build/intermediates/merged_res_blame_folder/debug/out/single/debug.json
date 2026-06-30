@@ -1,0 +1,74 @@
+[
+    {
+        "merged": "C:\\Users\\waima\\.gradle\\daemon\\8.4\\com.weatherwidget.app-merged_res-38:\\mipmap-hdpi_ic_launcher.xml.flat",
+        "source": "C:\\Users\\waima\\.gradle\\daemon\\8.4\\com.weatherwidget.app-main-40:\\mipmap-hdpi\\ic_launcher.xml"
+    },
+    {
+        "merged": "C:\\Users\\waima\\.gradle\\daemon\\8.4\\com.weatherwidget.app-merged_res-38:\\drawable_ic_weather_snow.xml.flat",
+        "source": "C:\\Users\\waima\\.gradle\\daemon\\8.4\\com.weatherwidget.app-main-40:\\drawable\\ic_weather_snow.xml"
+    },
+    {
+        "merged": "C:\\Users\\waima\\.gradle\\daemon\\8.4\\com.weatherwidget.app-merged_res-38:\\xml_weather_widget_info.xml.flat",
+        "source": "C:\\Users\\waima\\.gradle\\daemon\\8.4\\com.weatherwidget.app-main-40:\\xml\\weather_widget_info.xml"
+    },
+    {
+        "merged": "C:\\Users\\waima\\.gradle\\daemon\\8.4\\com.weatherwidget.app-merged_res-38:\\drawable_ic_weather_clear_day.xml.flat",
+        "source": "C:\\Users\\waima\\.gradle\\daemon\\8.4\\com.weatherwidget.app-main-40:\\drawable\\ic_weather_clear_day.xml"
+    },
+    {
+        "merged": "C:\\Users\\waima\\.gradle\\daemon\\8.4\\com.weatherwidget.app-merged_res-38:\\mipmap-hdpi_ic_launcher_round.xml.flat",
+        "source": "C:\\Users\\waima\\.gradle\\daemon\\8.4\\com.weatherwidget.app-main-40:\\mipmap-hdpi\\ic_launcher_round.xml"
+    },
+    {
+        "merged": "com.weatherwidget.app-merged_res-38:/layout_widget_weather.xml.flat",
+        "source": "com.weatherwidget.app-main-40:/layout/widget_weather.xml"
+    },
+    {
+        "merged": "C:\\Users\\waima\\.gradle\\daemon\\8.4\\com.weatherwidget.app-merged_res-38:\\drawable_ic_weather_clear_night.xml.flat",
+        "source": "C:\\Users\\waima\\.gradle\\daemon\\8.4\\com.weatherwidget.app-main-40:\\drawable\\ic_weather_clear_night.xml"
+    },
+    {
+        "merged": "C:\\Users\\waima\\.gradle\\daemon\\8.4\\com.weatherwidget.app-merged_res-38:\\drawable_ic_weather_cloudy.xml.flat",
+        "source": "C:\\Users\\waima\\.gradle\\daemon\\8.4\\com.weatherwidget.app-main-40:\\drawable\\ic_weather_cloudy.xml"
+    },
+    {
+        "merged": "C:\\Users\\waima\\.gradle\\daemon\\8.4\\com.weatherwidget.app-merged_res-38:\\drawable_ic_weather_thunderstorm.xml.flat",
+        "source": "C:\\Users\\waima\\.gradle\\daemon\\8.4\\com.weatherwidget.app-main-40:\\drawable\\ic_weather_thunderstorm.xml"
+    },
+    {
+        "merged": "C:\\Users\\waima\\.gradle\\daemon\\8.4\\com.weatherwidget.app-merged_res-38:\\drawable_widget_background.xml.flat",
+        "source": "C:\\Users\\waima\\.gradle\\daemon\\8.4\\com.weatherwidget.app-main-40:\\drawable\\widget_background.xml"
+    },
+    {
+        "merged": "C:\\Users\\waima\\.gradle\\daemon\\8.4\\com.weatherwidget.app-merged_res-38:\\layout_activity_main.xml.flat",
+        "source": "C:\\Users\\waima\\.gradle\\daemon\\8.4\\com.weatherwidget.app-main-40:\\layout\\activity_main.xml"
+    },
+    {
+        "merged": "com.weatherwidget.app-merged_res-38:/xml_weather_widget_info.xml.flat",
+        "source": "com.weatherwidget.app-main-40:/xml/weather_widget_info.xml"
+    },
+    {
+        "merged": "C:\\Users\\waima\\.gradle\\daemon\\8.4\\com.weatherwidget.app-merged_res-38:\\layout_widget_weather.xml.flat",
+        "source": "C:\\Users\\waima\\.gradle\\daemon\\8.4\\com.weatherwidget.app-main-40:\\layout\\widget_weather.xml"
+    },
+    {
+        "merged": "C:\\Users\\waima\\.gradle\\daemon\\8.4\\com.weatherwidget.app-merged_res-38:\\drawable_ic_weather_partly_cloudy_day.xml.flat",
+        "source": "C:\\Users\\waima\\.gradle\\daemon\\8.4\\com.weatherwidget.app-main-40:\\drawable\\ic_weather_partly_cloudy_day.xml"
+    },
+    {
+        "merged": "C:\\Users\\waima\\.gradle\\daemon\\8.4\\com.weatherwidget.app-merged_res-38:\\drawable_ic_weather_drizzle.xml.flat",
+        "source": "C:\\Users\\waima\\.gradle\\daemon\\8.4\\com.weatherwidget.app-main-40:\\drawable\\ic_weather_drizzle.xml"
+    },
+    {
+        "merged": "C:\\Users\\waima\\.gradle\\daemon\\8.4\\com.weatherwidget.app-merged_res-38:\\drawable_ic_weather_partly_cloudy_night.xml.flat",
+        "source": "C:\\Users\\waima\\.gradle\\daemon\\8.4\\com.weatherwidget.app-main-40:\\drawable\\ic_weather_partly_cloudy_night.xml"
+    },
+    {
+        "merged": "C:\\Users\\waima\\.gradle\\daemon\\8.4\\com.weatherwidget.app-merged_res-38:\\drawable_ic_weather_fog.xml.flat",
+        "source": "C:\\Users\\waima\\.gradle\\daemon\\8.4\\com.weatherwidget.app-main-40:\\drawable\\ic_weather_fog.xml"
+    },
+    {
+        "merged": "C:\\Users\\waima\\.gradle\\daemon\\8.4\\com.weatherwidget.app-merged_res-38:\\drawable_ic_weather_rain.xml.flat",
+        "source": "C:\\Users\\waima\\.gradle\\daemon\\8.4\\com.weatherwidget.app-main-40:\\drawable\\ic_weather_rain.xml"
+    }
+]
